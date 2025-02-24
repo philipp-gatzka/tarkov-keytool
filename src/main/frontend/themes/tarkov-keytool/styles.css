@@ -1,0 +1,34 @@
+@import url('./application-layout.css');
+
+[theme~="dark"] {
+    --lumo-shade-5pct: rgba(20, 20, 20, 0.05);
+    --lumo-shade-10pct: rgba(20, 20, 20, 0.1);
+    --lumo-shade-20pct: rgba(20, 20, 20, 0.2);
+    --lumo-shade-30pct: rgba(20, 20, 20, 0.3);
+    --lumo-shade-40pct: rgba(20, 20, 20, 0.4);
+    --lumo-shade-50pct: rgba(20, 20, 20, 0.5);
+    --lumo-shade-60pct: rgba(20, 20, 20, 0.6);
+    --lumo-shade-70pct: rgba(20, 20, 20, 0.7);
+    --lumo-shade-80pct: rgba(20, 20, 20, 0.8);
+    --lumo-shade-90pct: rgba(20, 20, 20, 0.9);
+
+    --lumo-primary-color-50pct: rgba(100, 149, 237, 0.5);
+    --lumo-primary-color-10pct: rgba(100, 149, 237, 0.1);
+
+    --lumo-error-color-50pct: rgba(255, 69, 58, 0.5);
+    --lumo-error-color-10pct: rgba(255, 69, 58, 0.1);
+
+    --lumo-success-color-50pct: rgba(50, 205, 50, 0.5);
+    --lumo-success-color-10pct: rgba(50, 205, 50, 0.1);
+
+    --lumo-shade: #141414;
+    --lumo-primary-color: #6495ED;
+    --lumo-primary-text-color: #BBE1FF;
+    --lumo-error-color: #FF453A;
+    --lumo-error-text-color: #FFC1BD;
+    --lumo-success-color: #32CD32;
+    --lumo-success-contrast-color: #1A4F1A;
+    --lumo-success-text-color: #B8F2B8;
+    --lumo-base-color: #1E1E1E;
+    --lumo-body-text-color: #E0E0E0;
+}
