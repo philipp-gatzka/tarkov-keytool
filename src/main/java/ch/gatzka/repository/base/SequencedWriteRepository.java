@@ -1,6 +1,7 @@
 package ch.gatzka.repository.base;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.Sequence;
@@ -15,14 +16,14 @@ public abstract class SequencedWriteRepository<R extends UpdatableRecord<R>> ext
 
   private final TableField<R, Integer> sequencedField;
 
-  public SequencedWriteRepository(DSLContext dslContext, Table<R> table, Sequence<Integer> sequence, TableField<R, Integer> sequencedField) {
+  protected SequencedWriteRepository(DSLContext dslContext, Table<R> table, Sequence<Integer> sequence, TableField<R, Integer> sequencedField) {
     super(dslContext, table);
     this.sequence = sequence;
     this.sequencedField = sequencedField;
   }
 
   @Override
-  public int insert(Function<R, R> mapping) {
+  public int insert(UnaryOperator<R> mapping) {
     return dslContext.transactionResult(configuration -> {
       DSLContext dslContext = configuration.dsl();
       Integer id = dslContext.nextval(sequence);
@@ -33,7 +34,7 @@ public abstract class SequencedWriteRepository<R extends UpdatableRecord<R>> ext
     });
   }
 
-  public void update(Function<R, R> mapping, int id) {
+  public void update(UnaryOperator<R> mapping, int id) {
     log.debug("Updating record with id {} with conditions {}", id, sequencedField.eq(id));
     update(mapping, sequencedField.eq(id));
   }

@@ -8,7 +8,6 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.server.VaadinService;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.function.Function;
@@ -27,7 +26,6 @@ public class ApplicationUtils {
   }
 
   public static String formattedNumber(Number number, Locale locale) {
-    locale = VaadinService.getCurrentRequest().getLocale();
     return NumberFormat.getInstance(locale).format(number);
   }
 

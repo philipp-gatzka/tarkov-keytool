@@ -49,9 +49,9 @@ public class ItemGridView extends VerticalLayout {
 
   private final GameMode gameMode;
 
-  private final TagRepository tagRepository;
+  private final transient TagRepository tagRepository;
 
-  private final ItemGridViewRepository itemGridViewRepository;
+  private final transient ItemGridViewRepository itemGridViewRepository;
 
   public ItemGridView(AuthenticatedAccount authenticatedAccount, TagRepository tagRepository, ItemGridViewRepository itemGridViewRepository) {
     this.tagRepository = tagRepository;

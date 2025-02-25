@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -207,6 +209,78 @@ public class DataProviderService {
                           String updated, Integer slots, String icon, String link, String wikiLink, String img,
                           String imgBig, String bsgId, String[] tags, Double diff24h, Double diff7days,
                           Boolean isFunctional, String reference) {
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+
+      ItemData itemData = (ItemData) o;
+
+      return new EqualsBuilder().append(uid(), itemData.uid())
+                                .append(img(), itemData.img())
+                                .append(name(), itemData.name())
+                                .append(icon(), itemData.icon())
+                                .append(link(), itemData.link())
+                                .append(bsgId(), itemData.bsgId())
+                                .append(price(), itemData.price())
+                                .append(slots(), itemData.slots())
+                                .append(imgBig(), itemData.imgBig())
+                                .append(tags(), itemData.tags())
+                                .append(updated(), itemData.updated())
+                                .append(diff24h(), itemData.diff24h())
+                                .append(wikiLink(), itemData.wikiLink())
+                                .append(shortName(), itemData.shortName())
+                                .append(diff7days(), itemData.diff7days())
+                                .append(reference(), itemData.reference())
+                                .append(basePrice(), itemData.basePrice())
+                                .append(traderName(), itemData.traderName())
+                                .append(avg24hPrice(), itemData.avg24hPrice())
+                                .append(traderPrice(), itemData.traderPrice())
+                                .append(bannedOnFlea(), itemData.bannedOnFlea())
+                                .append(isFunctional(), itemData.isFunctional())
+                                .append(avg7daysPrice(), itemData.avg7daysPrice())
+                                .append(traderPriceCur(), itemData.traderPriceCur())
+                                .append(haveMarketData(), itemData.haveMarketData())
+                                .append(traderPriceRub(), itemData.traderPriceRub())
+                                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37).append(uid())
+                                        .append(name())
+                                        .append(bannedOnFlea())
+                                        .append(haveMarketData())
+                                        .append(shortName())
+                                        .append(price())
+                                        .append(basePrice())
+                                        .append(avg24hPrice())
+                                        .append(avg7daysPrice())
+                                        .append(traderName())
+                                        .append(traderPrice())
+                                        .append(traderPriceCur())
+                                        .append(traderPriceRub())
+                                        .append(updated())
+                                        .append(slots())
+                                        .append(icon())
+                                        .append(link())
+                                        .append(wikiLink())
+                                        .append(img())
+                                        .append(imgBig())
+                                        .append(bsgId())
+                                        .append(tags())
+                                        .append(diff24h())
+                                        .append(diff7days())
+                                        .append(isFunctional())
+                                        .append(reference())
+                                        .toHashCode();
+    }
 
   }
 
