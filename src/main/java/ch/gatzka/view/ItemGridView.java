@@ -2,16 +2,16 @@ package ch.gatzka.view;
 
 import ch.gatzka.ApplicationUtils;
 import ch.gatzka.enums.GameMode;
+import ch.gatzka.repository.ItemGridViewRepository;
+import ch.gatzka.repository.TagRepository;
 import ch.gatzka.security.AuthenticatedAccount;
 import ch.gatzka.tables.records.ItemGridViewRecord;
-import ch.gatzka.view.service.ItemGridViewService;
-import com.vaadin.flow.component.AbstractField;
+import ch.gatzka.tables.records.TagRecord;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
@@ -19,7 +19,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.i18n.I18NProvider;
 import com.vaadin.flow.router.Menu;
@@ -34,7 +33,6 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 import static ch.gatzka.ApplicationUtils.defaultStripedGrid;
@@ -48,14 +46,16 @@ public class ItemGridView extends VerticalLayout {
 
     private final Grid<ItemGridViewRecord> grid = defaultStripedGrid(ItemGridViewRecord.class);
 
-    private final ItemGridViewService service;
-
     private final Map<String, Condition> filterConditions = new HashMap<>();
 
     private final GameMode gameMode;
 
-    public ItemGridView(ItemGridViewService service, AuthenticatedAccount authenticatedAccount) {
-        this.service = service;
+    private final TagRepository tagRepository;
+    private final ItemGridViewRepository itemGridViewRepository;
+
+    public ItemGridView(AuthenticatedAccount authenticatedAccount, TagRepository tagRepository, ItemGridViewRepository itemGridViewRepository) {
+        this.tagRepository = tagRepository;
+        this.itemGridViewRepository = itemGridViewRepository;
         this.gameMode = authenticatedAccount.isAuthenticated() ? authenticatedAccount.getAccount().getMode() : GameMode.PVP;
 
         setSizeFull();
@@ -66,15 +66,7 @@ public class ItemGridView extends VerticalLayout {
         refreshGrid();
     }
 
-    private <V> void setFilter(String name, AbstractField.ComponentValueChangeEvent<?, V> event, Function<V, Condition> conditionCreator) {
-        if (event.getValue() == null) {
-            filterConditions.remove(name);
-        } else {
-            filterConditions.put(name, conditionCreator.apply(event.getValue()));
-        }
-    }
-
-    private <V> HasValue.ValueChangeListener<HasValue.ValueChangeEvent<V>> createFilterListener(String name, Function<V, Condition> conditionCreator){
+    private <V> HasValue.ValueChangeListener<HasValue.ValueChangeEvent<V>> createFilterListener(String name, Function<V, Condition> conditionCreator) {
         return event -> {
             if (event.getValue() == null) {
                 filterConditions.remove(name);
@@ -95,14 +87,14 @@ public class ItemGridView extends VerticalLayout {
         nameFilter.setClearButtonVisible(true);
         nameFilter.setWidthFull();
 
-        MultiSelectComboBox<String> tagFilter = new MultiSelectComboBox<>();
+        MultiSelectComboBox<TagRecord> tagFilter = new MultiSelectComboBox<>();
         tagFilter.setLabel(i18n.getTranslation("items.filter.tag.label", locale));
         tagFilter.setPlaceholder(i18n.getTranslation("items.filter.tag.placeholder", locale));
-        tagFilter.setItems(service.readItemTags());
+        tagFilter.setItems(tagRepository.read());
         tagFilter.setClearButtonVisible(true);
         tagFilter.setWidthFull();
-        tagFilter.addValueChangeListener(createFilterListener("tag", value -> ITEM_GRID_VIEW.TAGS.contains(value.toArray(String[]::new))));
-        tagFilter.setItemLabelGenerator(item -> item.replace("_", " "));
+        tagFilter.addValueChangeListener(createFilterListener("tag", value -> ITEM_GRID_VIEW.TAGS.contains(value.stream().map(TagRecord::getTag).toArray(String[]::new))));
+        tagFilter.setItemLabelGenerator(TagRecord::getClean);
 
         Button resetButton = new Button(i18n.getTranslation("items.filter.button.reset.label", locale));
         resetButton.setIcon(new Icon(VaadinIcon.TRASH));
@@ -135,7 +127,7 @@ public class ItemGridView extends VerticalLayout {
     }
 
     private void refreshGrid() {
-        grid.setItems(service.readItems(filterConditions.values()));
+        grid.setItems(itemGridViewRepository.read(filterConditions.values()));
     }
 
     private void createGrid() {

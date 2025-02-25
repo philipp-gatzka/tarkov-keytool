@@ -18,14 +18,14 @@ import java.util.function.Function;
 @UtilityClass
 public class ApplicationUtils {
 
+    public static final String ROUBLE = "₽";
+
     public static <V> Grid<V> defaultStripedGrid(Class<V> clazz) {
         Grid<V> grid = new Grid<>(clazz, false);
         grid.setSizeFull();
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         return grid;
     }
-
-    public static final String ROUBLE = "₽";
 
     public static String formattedNumber(Number number, Locale locale) {
         locale = VaadinService.getCurrentRequest().getLocale();

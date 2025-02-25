@@ -10,6 +10,7 @@ plugins {
     id("org.sonarqube") version "6.0.1.5171"
     id("io.freefair.lombok") version "8.12.2"
     id("org.flywaydb.flyway") version "11.3.3"
+    id("com.apollographql.apollo") version "4.1.1"
     id("org.springframework.boot") version "3.4.3"
     id("org.jooq.jooq-codegen-gradle") version "3.19.18"
     id("io.spring.dependency-management") version "1.1.7"
@@ -22,15 +23,11 @@ val databaseMigrationUser: String? = findProperty("database.migration.user") as 
 val databaseMigrationPassword: String? = findProperty("database.migration.password") as String?
 
 tasks {
-    withType<JavaCompile> {
+    compileJava {
         options.release.set(23)
         options.encoding = "UTF-8"
-    }
-    withType<Test> {
-        useJUnitPlatform()
-    }
-    compileJava {
         dependsOn(jooqCodegen)
+        dependsOn(generateApolloSources)
     }
     jooqCodegen {
         dependsOn("migrateDEV")
@@ -49,6 +46,9 @@ tasks {
                 }
             }
         }
+    }
+    named("generateApolloSources") {
+        dependsOn("downloadTarkovApolloSchemaFromIntrospection")
     }
     register("printVersion") {
         doLast {
@@ -180,6 +180,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.parttio:line-awesome:2.1.0")
+    implementation("com.apollographql.java:client:0.0.2")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
@@ -219,4 +220,18 @@ val databaseContainer = PostgreSQLContainer("postgres:15").apply {
     withUsername("postgres")
     withPassword("postgres")
     setPortBindings(listOf("60356:5432"))
+}
+
+val apolloSchemaFile = layout.buildDirectory.file("schema.graphql")
+
+apollo {
+    service("tarkov") {
+        packageName.set("ch.gatzka")
+        srcDir("src/main/resources")
+        introspection {
+            endpointUrl.set("https://api.tarkov.dev/graphql")
+            schemaFile.set(apolloSchemaFile)
+        }
+        schemaFile.set(apolloSchemaFile)
+    }
 }

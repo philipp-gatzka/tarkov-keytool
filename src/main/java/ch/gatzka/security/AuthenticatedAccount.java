@@ -1,6 +1,6 @@
 package ch.gatzka.security;
 
-import ch.gatzka.service.AccountService;
+import ch.gatzka.repository.AccountRepository;
 import ch.gatzka.tables.records.AccountRecord;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticatedAccount {
 
-    private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     private final AuthenticationContext authenticationContext;
 
     public Optional<Info> getOptional() {
         return authenticationContext.getAuthenticatedUser(DefaultOAuth2User.class)
-                .flatMap(userDetails -> accountService.findAccountByEmail(userDetails.getName())
+                .flatMap(userDetails -> accountRepository.findOptionalByEmail(userDetails.getName())
                         .map(account -> new Info(userDetails.getAttributes(), account)));
     }
 

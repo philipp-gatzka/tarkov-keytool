@@ -30,9 +30,8 @@ import java.util.List;
 @AnonymousAllowed
 public class ApplicationLayout extends AppLayout {
 
-    private H1 title;
-
     private final AuthenticatedAccount authenticatedUser;
+    private H1 title;
 
     public ApplicationLayout(AuthenticatedAccount authenticatedUser) {
         this.authenticatedUser = authenticatedUser;

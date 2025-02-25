@@ -1,6 +1,8 @@
 package ch.gatzka.security;
 
-import ch.gatzka.service.AccountService;
+import ch.gatzka.enums.AccountRole;
+import ch.gatzka.enums.GameMode;
+import ch.gatzka.repository.AccountRepository;
 import ch.gatzka.tables.records.AccountRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OAuth2Service extends DefaultOAuth2UserService {
 
-    private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -29,12 +31,11 @@ public class OAuth2Service extends DefaultOAuth2UserService {
 
         String email = oAuth2User.getAttribute("email");
 
-        if (!accountService.accountExistsByEmail(email)) {
-            accountService.createUserAccount(email);
+        if (!accountRepository.existsByEmail(email)) {
+            accountRepository.insert(entity -> entity.setEmail(email).setRoles(new AccountRole[]{AccountRole.USER}).setMode(GameMode.PVP));
         }
 
-        AccountRecord account = accountService.getAccountByEmail(email);
-
+        AccountRecord account = accountRepository.findByEmail(email);
         return new DefaultOAuth2User(getAuthorities(account), oAuth2User.getAttributes(), "email");
     }
 
