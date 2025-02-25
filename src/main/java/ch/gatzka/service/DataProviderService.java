@@ -195,7 +195,7 @@ public class DataProviderService {
     return data;
   }
 
-  @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+  @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES, initialDelay = 1)
   private void performUpdate() {
     log.info("Scheduled task started: updateData");
     updateData();

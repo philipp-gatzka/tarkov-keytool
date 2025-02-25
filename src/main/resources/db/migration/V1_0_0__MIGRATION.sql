@@ -87,6 +87,27 @@ FROM item
          JOIN latest_item_price_view latest_pve_price
               ON item.id = latest_pve_price.item_id AND latest_pve_price.mode = 'PVE';
 
+create or replace view key_grid_view as
+SELECT item.id                                AS item_id,
+       item.name,
+       item.icon_link,
+       item.trader_price,
+       item.trader_price / key.uses as trader_price_per_use,
+       item.trader_currency,
+       key.uses,
+       latest_pvp_price.flea_price            AS pvp_price,
+       latest_pvp_price.flea_price / key.uses AS pvp_price_per_use,
+       latest_pve_price.flea_price            AS pve_price,
+       latest_pve_price.flea_price / key.uses AS pve_price_per_use,
+       latest_pvp_price.banned_on_flea        AS pvp_flea_banned,
+       latest_pve_price.banned_on_flea        AS pve_flea_banned
+FROM key
+         join item on key.item_id = item.id
+         JOIN latest_item_price_view latest_pvp_price
+              ON item.id = latest_pvp_price.item_id AND latest_pvp_price.mode = 'PVP'::GAME_MODE
+         JOIN latest_item_price_view latest_pve_price
+              ON item.id = latest_pve_price.item_id AND latest_pve_price.mode = 'PVE'::GAME_MODE;
+
 CREATE OR REPLACE VIEW tag AS
 SELECT tag,
        REPLACE(tag, '_', ' ') AS clean
