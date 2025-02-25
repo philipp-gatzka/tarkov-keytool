@@ -11,7 +11,7 @@ plugins {
     id("io.freefair.lombok") version "8.12.2"
     id("org.flywaydb.flyway") version "11.3.3"
     id("org.springframework.boot") version "3.4.3"
-    id("org.jooq.jooq-codegen-gradle") version "3.20.1"
+    id("org.jooq.jooq-codegen-gradle") version "3.19.18"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
