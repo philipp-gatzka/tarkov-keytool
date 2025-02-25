@@ -7,6 +7,7 @@ plugins {
     id("java")
     id("idea")
     id("com.vaadin") version "24.6.5"
+    id("org.sonarqube") version "6.0.1.5171"
     id("io.freefair.lombok") version "8.12.1"
     id("org.flywaydb.flyway") version "11.3.3"
     id("org.springframework.boot") version "3.4.3"
@@ -49,7 +50,7 @@ tasks {
             }
         }
     }
-    register("printVersion"){
+    register("printVersion") {
         doLast {
             println(project.version)
         }
@@ -156,6 +157,14 @@ jooq {
                 }
             }
         }
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "ch.gatzka:tarkov-keytool")
+        property("sonar.organization", "philipp-gatzka-org")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
