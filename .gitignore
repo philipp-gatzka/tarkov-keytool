@@ -2,6 +2,7 @@
 /.idea/
 /build/
 /src/main/frontend/generated/
+/src/main/resources/application-development.properties
 /logs/
 /target/
 /*.iml
