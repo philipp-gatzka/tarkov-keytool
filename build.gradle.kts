@@ -8,7 +8,7 @@ plugins {
     id("idea")
     id("com.vaadin") version "24.6.5"
     id("org.sonarqube") version "6.0.1.5171"
-    id("io.freefair.lombok") version "8.12.1"
+    id("io.freefair.lombok") version "8.12.2"
     id("org.flywaydb.flyway") version "11.3.3"
     id("org.springframework.boot") version "3.4.3"
     id("org.jooq.jooq-codegen-gradle") version "3.20.1"
