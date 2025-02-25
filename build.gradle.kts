@@ -83,7 +83,12 @@ tasks {
         dependsOn("buildDockerImage")
         doLast {
             exec {
-                commandLine("docker", "tag", "tarkov-keytool:${project.version}", "ghcr.io/philipp-gatzka/tarkov-keytool:${project.version}")
+                commandLine(
+                    "docker",
+                    "tag",
+                    "tarkov-keytool:${project.version}",
+                    "ghcr.io/philipp-gatzka/tarkov-keytool:${project.version}"
+                )
             }
         }
     }

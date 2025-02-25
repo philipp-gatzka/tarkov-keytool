@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Run Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <configuration default="false" name="Run Application" type="SpringBootApplicationConfigurationType"
+                   factoryName="Spring Boot">
         <option name="envFilePaths">
             <option value="$PROJECT_DIR$/.env"/>
         </option>

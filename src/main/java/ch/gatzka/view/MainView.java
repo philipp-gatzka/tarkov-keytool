@@ -12,4 +12,5 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Menu(order = 0, icon = LineAwesomeIconUrl.ADDRESS_CARD)
 @AnonymousAllowed
 public class MainView extends VerticalLayout {
+
 }
