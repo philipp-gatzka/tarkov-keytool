@@ -49,6 +49,11 @@ tasks {
             }
         }
     }
+    register("printVersion"){
+        doLast {
+            println(project.version)
+        }
+    }
     register("startContainer") {
         doLast {
             if (databaseContainer.isRunning) {
@@ -63,6 +68,30 @@ tasks {
     register("stopContainer") {
         doLast {
             databaseContainer.stop()
+        }
+    }
+    register("buildDockerImage") {
+        dependsOn(bootJar)
+        doLast {
+            exec {
+                commandLine("docker", "build", "-t", "tarkov-keytool:${project.version}", ".")
+            }
+        }
+    }
+    register("tagDockerImage") {
+        dependsOn("buildDockerImage")
+        doLast {
+            exec {
+                commandLine("docker", "tag", "tarkov-keytool:${project.version}", "ghcr.io/philipp-gatzka/tarkov-keytool:${project.version}")
+            }
+        }
+    }
+    register("pushDockerImage") {
+        dependsOn("tagDockerImage")
+        doLast {
+            exec {
+                commandLine("docker", "push", "ghcr.io/philipp-gatzka/tarkov-keytool:${project.version}")
+            }
         }
     }
     register<FlywayMigrateTask>("migrateDEV") {
