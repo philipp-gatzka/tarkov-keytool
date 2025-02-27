@@ -1,8 +1,2 @@
 /.gradle/
 /.idea/
-/build/
-/src/main/frontend/generated/
-/logs/
-/target/
-/*.iml
-/.env
