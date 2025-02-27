@@ -22,19 +22,21 @@ CREATE TABLE account
 
 CREATE TABLE item
 (
-    id              SERIAL         NOT NULL PRIMARY KEY,
-    market_id       VARCHAR(255)   NOT NULL UNIQUE,
-    tarkov_id       VARCHAR(255)   NOT NULL UNIQUE,
-    name            VARCHAR(255)   NOT NULL,
-    icon_link       VARCHAR(255)   NOT NULL,
-    market_link     VARCHAR(255)   NOT NULL,
-    wiki_link       VARCHAR(255)   NOT NULL,
-    slots           INTEGER        NOT NULL,
-    tags            VARCHAR(255)[] NOT NULL,
-    last_update     TIMESTAMP      NOT NULL,
-    trader_name     VARCHAR(255)   NOT NULL,
-    trader_price    INTEGER        NOT NULL,
-    trader_currency CHAR           NOT NULL
+    id               SERIAL         NOT NULL PRIMARY KEY,
+    market_id        VARCHAR(255)   NOT NULL UNIQUE,
+    tarkov_id        VARCHAR(255)   NOT NULL UNIQUE,
+    name             VARCHAR(255)   NOT NULL,
+    icon_link        VARCHAR(255)   NOT NULL,
+    market_link      VARCHAR(255)   NOT NULL,
+    wiki_link        VARCHAR(255)   NOT NULL,
+    slots            INTEGER        NOT NULL,
+    vertical_slots   INTEGER        not null default 1,
+    horizontal_slots INTEGER        not null default 1,
+    tags             VARCHAR(255)[] NOT NULL,
+    last_update      TIMESTAMP      NOT NULL,
+    trader_name      VARCHAR(255)   NOT NULL,
+    trader_price     INTEGER        NOT NULL,
+    trader_currency  CHAR           NOT NULL
 );
 
 CREATE TABLE item_price
@@ -72,7 +74,8 @@ SELECT item.id                         AS item_id,
        item.icon_link,
        item.market_link,
        item.wiki_link,
-       item.slots,
+       item.vertical_slots,
+       item.horizontal_slots,
        item.tags,
        item.trader_name,
        item.trader_price,
@@ -92,7 +95,7 @@ SELECT item.id                                AS item_id,
        item.name,
        item.icon_link,
        item.trader_price,
-       item.trader_price / key.uses as trader_price_per_use,
+       item.trader_price / key.uses           as trader_price_per_use,
        item.trader_currency,
        key.uses,
        latest_pvp_price.flea_price            AS pvp_price,
@@ -114,6 +117,83 @@ SELECT tag,
 FROM item,
      UNNEST(item.tags) AS all_tags(tag)
 GROUP BY tag;
+
+create view key_view as
+select item.id,
+       item.market_id,
+       item.tarkov_id,
+       item.name,
+       item.icon_link,
+       item.market_link,
+       item.wiki_link,
+       item.slots,
+       item.vertical_slots,
+       item.horizontal_slots,
+       item.tags,
+       item.last_update,
+       item.trader_name,
+       item.trader_price,
+       item.trader_currency,
+       key.uses
+from key
+         join item on key.item_id = item.id;
+
+CREATE OR REPLACE FUNCTION get_item_value(input_item_id integer, game_mode game_mode)
+    RETURNS NUMERIC AS
+$$
+DECLARE
+    dollar_price         numeric;
+    item_trader_price    NUMERIC;
+    item_trader_currency varchar;
+    item_flea_price      numeric;
+    item_banned_on_flea  bool;
+    result               NUMERIC;
+BEGIN
+    select item.trader_currency into item_trader_currency from item where item.id = get_item_value.input_item_id;
+    select item.trader_price into item_trader_price from item where item.id = get_item_value.input_item_id;
+
+    IF item_trader_currency = '$' THEN
+        select item.trader_price into dollar_price from item where item.tarkov_id = '5696686a4bdc2da3298b456a';
+        item_trader_price := item_trader_price * dollar_price;
+    end if;
+
+    select latest_item_price_view.banned_on_flea
+    into item_banned_on_flea
+    from item
+             join latest_item_price_view on item.id = latest_item_price_view.item_id
+    where item.id = get_item_value.input_item_id;
+
+    select latest_item_price_view.flea_price
+    into item_flea_price
+    from item
+             join latest_item_price_view on item.id = latest_item_price_view.item_id
+    where item.id = get_item_value.input_item_id
+      and latest_item_price_view.mode = get_item_value.game_mode;
+
+    IF item_banned_on_flea or item_flea_price < item_trader_price then
+        result := item_trader_price;
+    else
+        result := item_flea_price;
+    end if;
+
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+create table key_report
+(
+    id          serial    not null primary key,
+    key_id      integer   not null references key,
+    reported_at timestamp not null default current_timestamp,
+    account_id  integer   not null references account
+);
+
+create table loot_report
+(
+    key_report_id integer not null references key_report,
+    item_id       integer not null references item,
+    count         integer not null
+);
 
 GRANT DELETE , INSERT, SELECT, UPDATE ON ALL TABLES IN SCHEMA public TO tarkov_keytool;
 

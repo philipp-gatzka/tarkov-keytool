@@ -19,8 +19,8 @@ public class AuthenticatedAccount {
 
   public Optional<Info> getOptional() {
     return authenticationContext.getAuthenticatedUser(DefaultOAuth2User.class)
-                                .flatMap(userDetails -> accountRepository.findOptionalByEmail(userDetails.getName())
-                                                                         .map(account -> new Info(userDetails.getAttributes(), account)));
+        .flatMap(userDetails -> accountRepository.findOptionalByEmail(userDetails.getName())
+            .map(account -> new Info(userDetails.getAttributes(), account)));
   }
 
   public Info get() {

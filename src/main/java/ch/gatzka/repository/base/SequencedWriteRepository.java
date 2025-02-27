@@ -1,6 +1,5 @@
 package ch.gatzka.repository.base;
 
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
@@ -16,10 +15,15 @@ public abstract class SequencedWriteRepository<R extends UpdatableRecord<R>> ext
 
   private final TableField<R, Integer> sequencedField;
 
-  protected SequencedWriteRepository(DSLContext dslContext, Table<R> table, Sequence<Integer> sequence, TableField<R, Integer> sequencedField) {
+  protected SequencedWriteRepository(DSLContext dslContext, Table<R> table, Sequence<Integer> sequence,
+      TableField<R, Integer> sequencedField) {
     super(dslContext, table);
     this.sequence = sequence;
     this.sequencedField = sequencedField;
+  }
+
+  public R find(int id) {
+    return find(sequencedField.eq(id));
   }
 
   @Override

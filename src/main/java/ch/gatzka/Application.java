@@ -14,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Slf4j
 @EnableScheduling
@@ -56,5 +57,14 @@ public class Application implements AppShellConfigurator {
       }
     };
   }
+
+  // @Bean
+  // public ThreadPoolTaskExecutor taskExecutor() {
+  //   ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+  //   taskExecutor.setCorePoolSize(5);
+  //   taskExecutor.setMaxPoolSize(10);
+  //   taskExecutor.setQueueCapacity(25);
+  //   return taskExecutor;
+  // }
 
 }

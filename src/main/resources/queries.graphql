@@ -8,3 +8,11 @@ query FetchKeys {
         }
     }
 }
+
+query FetchItemSlots {
+    items {
+        id
+        width
+        height
+    }
+}

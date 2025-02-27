@@ -18,17 +18,17 @@ public class SecurityConfiguration extends VaadinWebSecurity {
   protected void configure(HttpSecurity http) throws Exception {
 
     http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/images/*.png"))
-                                                     .permitAll());
+        .permitAll());
     http.authorizeHttpRequests(authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/line-awesome/**/*.svg"))
-                                                     .permitAll());
+        .permitAll());
 
     super.configure(http);
 
     setOAuth2LoginPage(http, "/oauth2/authorization/google");
 
     http.oauth2Login(oAuth -> oAuth.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
-                                   .defaultSuccessUrl("/", true)
-                                   .permitAll());
+        .defaultSuccessUrl("/", true)
+        .permitAll());
   }
 
 }

@@ -186,6 +186,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.parttio:line-awesome:2.1.0")
     implementation("com.apollographql.java:client:0.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 

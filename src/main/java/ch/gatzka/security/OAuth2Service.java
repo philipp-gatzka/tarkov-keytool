@@ -32,8 +32,8 @@ public class OAuth2Service extends DefaultOAuth2UserService {
 
     if (!accountRepository.existsByEmail(email)) {
       accountRepository.insert(entity -> entity.setEmail(email)
-                                               .setRoles(new AccountRole[]{AccountRole.USER})
-                                               .setMode(GameMode.PVP));
+          .setRoles(new AccountRole[]{AccountRole.USER})
+          .setMode(GameMode.PVP));
     }
 
     AccountRecord account = accountRepository.findByEmail(email);

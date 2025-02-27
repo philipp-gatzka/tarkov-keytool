@@ -53,7 +53,8 @@ public class ItemGridView extends VerticalLayout {
 
   private final transient ItemGridViewRepository itemGridViewRepository;
 
-  public ItemGridView(AuthenticatedAccount authenticatedAccount, TagRepository tagRepository, ItemGridViewRepository itemGridViewRepository) {
+  public ItemGridView(AuthenticatedAccount authenticatedAccount, TagRepository tagRepository,
+      ItemGridViewRepository itemGridViewRepository) {
     this.tagRepository = tagRepository;
     this.itemGridViewRepository = itemGridViewRepository;
     this.gameMode = authenticatedAccount.isAuthenticated() ? authenticatedAccount.getAccount().getMode() : GameMode.PVP;
@@ -66,7 +67,8 @@ public class ItemGridView extends VerticalLayout {
     refreshGrid();
   }
 
-  private <V> HasValue.ValueChangeListener<HasValue.ValueChangeEvent<V>> createFilterListener(String name, Function<V, Condition> conditionCreator) {
+  private <V> HasValue.ValueChangeListener<HasValue.ValueChangeEvent<V>> createFilterListener(String name,
+      Function<V, Condition> conditionCreator) {
     return event -> {
       if (event.getValue() == null) {
         filterConditions.remove(name);
@@ -94,8 +96,8 @@ public class ItemGridView extends VerticalLayout {
     tagFilter.setClearButtonVisible(true);
     tagFilter.setWidthFull();
     tagFilter.addValueChangeListener(createFilterListener("tag", value -> ITEM_GRID_VIEW.TAGS.contains(value.stream()
-                                                                                                            .map(TagRecord::getTag)
-                                                                                                            .toArray(String[]::new))));
+        .map(TagRecord::getTag)
+        .toArray(String[]::new))));
     tagFilter.setItemLabelGenerator(TagRecord::getClean);
 
     Button resetButton = new Button(i18n.getTranslation("items.filter.button.reset.label", locale));
@@ -136,7 +138,7 @@ public class ItemGridView extends VerticalLayout {
     I18NProvider i18n = VaadinService.getCurrent().getInstantiator().getI18NProvider();
     Locale locale = VaadinService.getCurrentRequest().getLocale();
 
-    grid.addComponentColumn(entry -> ApplicationUtils.createImageRenderer(entry, ItemGridViewRecord::getIconLink, ItemGridViewRecord::getName))
+    grid.addComponentColumn(entry -> ApplicationUtils.createImageRenderer(entry, entry.getHorizontalSlots(), entry.getVerticalSlots(), ItemGridViewRecord::getIconLink, ItemGridViewRecord::getName))
         .setHeader(i18n.getTranslation("items.grid.column.image.header", locale));
     grid.addColumn("name").setHeader(i18n.getTranslation("items.grid.column.name.header", locale));
 
@@ -153,11 +155,11 @@ public class ItemGridView extends VerticalLayout {
             yield entry.getPvePrice();
           case PVP:
             yield entry.getPvpPrice();
-        }, locale))
+        }))
         .setHeader(i18n.getTranslation("items.grid.column.flea_value.header", locale));
 
     grid.addColumn("traderPrice")
-        .setRenderer(ApplicationUtils.priceRenderer(ItemGridViewRecord::getTraderCurrency, ItemGridViewRecord::getTraderPrice, locale))
+        .setRenderer(ApplicationUtils.priceRenderer(ItemGridViewRecord::getTraderCurrency, ItemGridViewRecord::getTraderPrice))
         .setHeader(i18n.getTranslation("items.grid.column.trader_value.header", locale));
 
     grid.addComponentColumn(entry -> {

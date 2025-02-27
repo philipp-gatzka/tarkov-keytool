@@ -5,7 +5,6 @@ import static ch.gatzka.Tables.KEY_GRID_VIEW;
 import ch.gatzka.repository.base.ViewRepository;
 import ch.gatzka.tables.records.KeyGridViewRecord;
 import org.jooq.DSLContext;
-import org.jooq.Table;
 import org.springframework.stereotype.Service;
 
 @Service

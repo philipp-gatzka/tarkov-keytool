@@ -34,7 +34,7 @@ import java.util.List;
 @AnonymousAllowed
 public class ApplicationLayout extends AppLayout {
 
-  private  final transient  AuthenticatedAccount authenticatedUser;
+  private final transient AuthenticatedAccount authenticatedUser;
 
   private H1 title;
 

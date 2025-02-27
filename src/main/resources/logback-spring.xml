@@ -26,6 +26,7 @@
     </root>
 
     <logger name="ch.gatzka" level="DEBUG"/>
+    <logger name="ch.gatzka.ApplicationUtils" level="INFO"/>
     <logger name="ch.gatzka.repository" level="INFO"/>
     <logger name="ch.gatzka.service.DataProviderService" level="INFO"/>
     <logger name="org.atmosphere.cpr.AtmosphereFramework" level="WARN"/>

@@ -6,17 +6,10 @@ import ch.gatzka.ApplicationUtils;
 import ch.gatzka.enums.GameMode;
 import ch.gatzka.repository.KeyGridViewRepository;
 import ch.gatzka.security.AuthenticatedAccount;
-import ch.gatzka.tables.records.ItemGridViewRecord;
 import ch.gatzka.tables.records.KeyGridViewRecord;
 import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.i18n.I18NProvider;
 import com.vaadin.flow.router.Menu;
@@ -58,7 +51,8 @@ public class KeyGridView extends VerticalLayout {
     refreshGrid();
   }
 
-  private <V> HasValue.ValueChangeListener<HasValue.ValueChangeEvent<V>> createFilterListener(String name, Function<V, Condition> conditionCreator) {
+  private <V> HasValue.ValueChangeListener<HasValue.ValueChangeEvent<V>> createFilterListener(String name,
+      Function<V, Condition> conditionCreator) {
     return event -> {
       if (event.getValue() == null) {
         filterConditions.remove(name);
@@ -95,7 +89,7 @@ public class KeyGridView extends VerticalLayout {
             yield entry.getPvePrice();
           case PVP:
             yield entry.getPvpPrice();
-        }, locale))
+        }))
         .setHeader(i18n.getTranslation("keys.grid.column.flea_value.header", locale));
 
     grid.addColumn(gameMode == GameMode.PVP ? "pvpPricePerUse" : "pvePricePerUse")
@@ -104,17 +98,18 @@ public class KeyGridView extends VerticalLayout {
             yield entry.getPvePricePerUse();
           case PVP:
             yield entry.getPvpPricePerUse();
-        }, locale))
+        }))
         .setHeader(i18n.getTranslation("keys.grid.column.flea_value_per_use.header", locale));
 
     grid.addColumn("traderPrice")
-        .setRenderer(ApplicationUtils.priceRenderer(KeyGridViewRecord::getTraderCurrency, KeyGridViewRecord::getTraderPrice, locale))
+        .setRenderer(ApplicationUtils.priceRenderer(KeyGridViewRecord::getTraderCurrency, KeyGridViewRecord::getTraderPrice))
         .setHeader(i18n.getTranslation("keys.grid.column.trader_value.header", locale));
 
     grid.addColumn("traderPricePerUse")
-        .setRenderer(ApplicationUtils.priceRenderer(KeyGridViewRecord::getTraderCurrency, KeyGridViewRecord::getTraderPrice, locale))
+        .setRenderer(ApplicationUtils.priceRenderer(KeyGridViewRecord::getTraderCurrency, KeyGridViewRecord::getTraderPrice))
         .setHeader(i18n.getTranslation("keys.grid.column.trader_value_per_use.header", locale));
 
     add(grid);
   }
+
 }
