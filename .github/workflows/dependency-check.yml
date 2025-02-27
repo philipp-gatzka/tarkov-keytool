@@ -2,6 +2,8 @@ name: Check dependencies
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   dependency-submission:
