@@ -1,3 +1,0 @@
-schema:
-  - https://api.tarkov.dev/graphql
-documents: '**/*.graphql'
