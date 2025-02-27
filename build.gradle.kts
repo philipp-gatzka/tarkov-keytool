@@ -1,22 +1,6 @@
 plugins {
     id("java")
-
     alias(libs.plugins.sonar)
-}
-
-group = "ch.gatzka"
-
-tasks {
-    compileJava {
-        options.encoding = "UTF-8"
-        options.release.set(23)
-    }
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(23))
-    }
 }
 
 sonar {
@@ -24,5 +8,24 @@ sonar {
         property("sonar.projectKey", "ch.gatzka:tarkov-keytool")
         property("sonar.organization", "philipp-gatzka-org")
         property("sonar.host.url", "https://sonarcloud.io")
+    }
+}
+
+allprojects {
+    group = "ch.gatzka"
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile::class) {
+        options.encoding = "UTF-8"
+        options.release.set(23)
+    }
+
+    extensions.findByType(JavaPluginExtension::class)?.apply {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(23))
+        }
     }
 }
