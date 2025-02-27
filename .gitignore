@@ -1,2 +1,5 @@
 /.gradle/
 /build/
+/logs/
+/src/main/frontend/generated
+/.env

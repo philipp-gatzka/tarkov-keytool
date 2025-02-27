@@ -7,6 +7,11 @@ plugins {
 
 group = "ch.gatzka"
 
+val databaseMigrationUrl: String? = findProperty("database.migration.url") as String?
+val databaseMigrationUser: String? = findProperty("database.migration.user") as String?
+val databaseMigrationPassword: String? = findProperty("database.migration.password") as String?
+
+
 tasks {
     register<DefaultTask>("startContainer") {
         group = "container"
@@ -35,9 +40,27 @@ tasks {
         dependsOn("startContainer")
         finalizedBy("stopContainer")
     }
+    register<org.flywaydb.gradle.task.FlywayMigrateTask>("migrate") {
+        doFirst {
+            checkNotNull(databaseMigrationUrl) { "gradle property 'database.migration.url' is not set" }
+            checkNotNull(databaseMigrationUser) { "gradle property 'database.migration.user' is not set" }
+            checkNotNull(databaseMigrationPassword) { "gradle property 'database.migration.password' is not set" }
+        }
+        url = databaseMigrationUrl
+        user = databaseMigrationUser
+        password = databaseMigrationPassword
+        schemas = arrayOf("public")
+    }
     jooqCodegen {
         dependsOn("migrateContainer")
         finalizedBy("stopContainer")
+        inputs.files(fileTree("src/main/resources/db/migration"))
+    }
+}
+
+java {
+    sourceSets["main"].java {
+        srcDir("build/generated-sources/jooq")
     }
 }
 
@@ -84,7 +107,8 @@ jooq {
 }
 
 dependencies {
-    implementation(libs.jooq)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(libs.spring.boot.jooq)
 }
 
 buildscript {
