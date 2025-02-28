@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="bindingEnabled" value="true" />
+    <option name="moduleMapping">
+      <map>
+        <entry key="api" value="tarkov-keytool.tarkov-market-api" />
+      </map>
+    </option>
+    <option name="projectKey" value="ch.gatzka:tarkov-keytool" />
+    <option name="serverId" value="sonarqube cloud" />
+  </component>
+</project>

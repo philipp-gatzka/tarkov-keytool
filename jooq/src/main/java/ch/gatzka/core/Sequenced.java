@@ -1,14 +1,34 @@
 package ch.gatzka.core;
 
 import java.util.function.UnaryOperator;
+import org.jooq.DSLContext;
+import org.jooq.Table;
+import org.jooq.TableField;
 import org.jooq.UpdatableRecord;
 
 public interface Sequenced<R extends UpdatableRecord<R>, I extends Number> {
 
-  int insert(UnaryOperator<R> mapping);
+  default I insertWithId(UnaryOperator<R> mapping) {
+    return getDslContext().insertInto(getTable())
+        .set(getDslContext().newRecord(getTable()))
+        .returningResult(getSequencedField())
+        .fetchSingle(getSequencedField());
+  }
 
-  void delete(I id);
+  default void deleteById(I id) {
+    getSelf().delete(getSequencedField().eq(id));
+  }
 
-  void update(UnaryOperator<R> mapping, I id);
+  default void updateById(UnaryOperator<R> mapping, I id) {
+    getSelf().update(mapping, getSequencedField().eq(id));
+  }
+
+  Table<R> getTable();
+
+  DSLContext getDslContext();
+
+  TableField<R, I> getSequencedField();
+
+  TableRepository<R> getSelf();
 
 }

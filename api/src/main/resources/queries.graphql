@@ -1,0 +1,18 @@
+query FetchKeys {
+    items(type: keys) {
+        id
+        properties {
+            ... on ItemPropertiesKey {
+                uses
+            }
+        }
+    }
+}
+
+query FetchItemSlots {
+    items {
+        id
+        width
+        height
+    }
+}
