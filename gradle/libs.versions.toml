@@ -1,15 +1,27 @@
 [versions]
 flyway = "11.3.3"
 jooq = "3.19.19"
+vaadin = "24.6.5"
+spring-boot = "3.4.3"
 
 [plugins]
 sonar = { id = "org.sonarqube", version = "6.0.1.5171" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 jooq = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
-spring-dependencies = { id = "io.spring.dependency-management", version = "1.1.7" }
+vaadin = { id = "com.vaadin", version.ref = "vaadin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+lombok = { id = "io.freefair.lombok", version = "8.12.2" }
 
 [libraries]
 flyway-postgres = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
-jooq = { group = "org.jooq", name = "jooq", version.ref = "jooq" }
 postgres = { group = "org.postgresql", name = "postgresql", version = "42.7.5" }
 testcontainer-postgres = { group = "org.testcontainers", name = "postgresql", version = "1.20.5" }
+spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
+vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin" }
+spring-boot-vaadin = { group = "com.vaadin", name = "vaadin-spring-boot-starter" }
+spring-boot-security = { group = "org.springframework.boot", name = "spring-boot-starter-security" }
+spring-boot-oauth2 = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
+spring-boot-jooq = { group = "org.springframework.boot", name = "spring-boot-starter-jooq" }
+spring-boot-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
+lineawesome = { group = "org.parttio", name = "line-awesome", version = "2.1.0" }

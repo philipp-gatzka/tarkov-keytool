@@ -1,2 +1,12 @@
+/libraries/
+/modules/
 /gradle.xml
 /workspace.xml
+/modules.xml
+/dataSources.local.xml
+/dataSources.xml
+/dataSources/
+/.copilot-plugin
+/misc.xml
+/compiler.xml
+/httpRequests
