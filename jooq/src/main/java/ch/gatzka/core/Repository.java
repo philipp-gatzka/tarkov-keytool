@@ -1,5 +1,6 @@
 package ch.gatzka.core;
 
+import lombok.Getter;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Result;
@@ -7,6 +8,7 @@ import org.jooq.Table;
 import org.jooq.TableRecord;
 import org.jooq.impl.DSL;
 
+@Getter
 public abstract class Repository<R extends TableRecord<R>> {
 
   protected final DSLContext dslContext;

@@ -25,4 +25,6 @@
         <appender-ref ref="FILE"/>
     </root>
 
+    <logger name="org.atmosphere.cpr.AtmosphereFramework" level="WARN"/>
+
 </configuration>

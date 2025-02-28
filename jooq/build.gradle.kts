@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     alias(libs.plugins.jooq)
     alias(libs.plugins.flyway)
+    alias(libs.plugins.lombok)
     alias(libs.plugins.sonar)
 }
 
@@ -55,6 +56,9 @@ tasks {
         dependsOn("migrateContainer")
         finalizedBy("stopContainer")
         inputs.files(fileTree("src/main/resources/db/migration"))
+    }
+    compileJava {
+        dependsOn(jooqCodegen)
     }
 }
 

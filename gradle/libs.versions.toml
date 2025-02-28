@@ -11,6 +11,7 @@ jooq = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
 vaadin = { id = "com.vaadin", version.ref = "vaadin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 lombok = { id = "io.freefair.lombok", version = "8.12.2" }
+apollo = { id = "com.apollographql.apollo", version = "4.1.1" }
 
 [libraries]
 flyway-postgres = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
@@ -24,4 +25,6 @@ spring-boot-oauth2 = { group = "org.springframework.boot", name = "spring-boot-s
 spring-boot-jooq = { group = "org.springframework.boot", name = "spring-boot-starter-jooq" }
 spring-boot-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
+spring-boot-web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
 lineawesome = { group = "org.parttio", name = "line-awesome", version = "2.1.0" }
+apollo = { group = "com.apollographql.java", name = "client", version = "0.0.2" }

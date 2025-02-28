@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.spring.boot.actuator)
 
     implementation(project(":jooq"))
+    implementation(project(":api"))
 
     implementation(libs.lineawesome)
 
