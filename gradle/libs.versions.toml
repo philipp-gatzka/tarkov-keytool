@@ -1,5 +1,5 @@
 [versions]
-flyway = "11.3.3"
+flyway = "11.3.4"
 jooq = "3.19.19"
 vaadin = "24.6.5"
 spring-boot = "3.4.3"
