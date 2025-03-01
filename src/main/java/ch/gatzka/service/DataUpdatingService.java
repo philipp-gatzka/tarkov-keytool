@@ -29,7 +29,7 @@ public class DataUpdatingService {
 
   private final KeyRepository keyRepository;
 
-  @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+  @Scheduled(initialDelay = 10, fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
   public void updateBaseData() {
     updatePVPData();
     updatePVEData();
