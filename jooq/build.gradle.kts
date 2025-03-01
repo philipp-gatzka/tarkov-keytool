@@ -113,6 +113,7 @@ jooq {
 dependencies {
     implementation(platform(libs.spring.boot.bom))
     implementation(libs.spring.boot.jooq)
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 buildscript {

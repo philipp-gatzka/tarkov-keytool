@@ -4,12 +4,12 @@ import static ch.gatzka.Tables.ITEM;
 import static ch.gatzka.Tables.KEY;
 
 import ch.gatzka.FetchKeysQuery;
-import ch.gatzka.ItemRepository;
-import ch.gatzka.KeyRepository;
 import ch.gatzka.Utils;
 import ch.gatzka.enums.Currency;
 import ch.gatzka.enums.GameMode;
 import ch.gatzka.pojo.Item;
+import ch.gatzka.table.ItemRepository;
+import ch.gatzka.table.KeyRepository;
 import ch.gatzka.tables.records.ItemRecord;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;

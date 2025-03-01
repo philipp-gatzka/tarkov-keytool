@@ -54,3 +54,28 @@ SELECT id                                                              AS item_i
        CASE WHEN NOT pve_banned_on_flea THEN pve_flea_price ELSE 0 END AS pve_flea_price,
        tags
 FROM item;
+
+CREATE VIEW tag_view AS
+SELECT tag,
+       REPLACE(tag, '_', ' ') AS clean
+FROM item,
+     UNNEST(item.tags) AS all_tags(tag)
+GROUP BY tag;
+
+CREATE VIEW key_grid_view AS
+SELECT item_id,
+       uses,
+       name,
+       icon_link,
+       tags
+FROM key
+         JOIN item ON key.item_id = id;
+
+CREATE VIEW location_view AS
+SELECT tag                    AS location,
+       REPLACE(tag, '_', ' ') AS clean
+FROM key
+         JOIN item ON id = key.item_id,
+     UNNEST(item.tags) AS all_tags(tag)
+WHERE tag != 'Keys'
+GROUP BY tag;

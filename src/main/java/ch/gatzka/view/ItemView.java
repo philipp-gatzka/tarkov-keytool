@@ -3,11 +3,13 @@ package ch.gatzka.view;
 import static ch.gatzka.Tables.ITEM_GRID_VIEW;
 import static ch.gatzka.enums.GameMode.PVP;
 
-import ch.gatzka.ItemGridViewRepository;
 import ch.gatzka.Utils;
+import ch.gatzka.core.Repository;
 import ch.gatzka.enums.GameMode;
 import ch.gatzka.security.AuthenticatedAccount;
 import ch.gatzka.tables.records.ItemGridViewRecord;
+import ch.gatzka.view.core.FilteredGridView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -16,70 +18,40 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoIcon;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import org.jooq.Condition;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Items")
 @Route("items")
 @Menu(order = 1, icon = LineAwesomeIconUrl.BOX_OPEN_SOLID)
 @AnonymousAllowed
-public class ItemView extends VerticalLayout {
+public class ItemView extends FilteredGridView<ItemGridViewRecord> {
 
-  private final ItemGridViewRepository itemGridViewRepository;
-
-  private final GameMode gameMode;
-
-  private final Grid<ItemGridViewRecord> grid = Utils.defaultStripedGrid(ItemGridViewRecord.class);
-
-  private final Map<String, Condition> filterConditions = new HashMap<>();
-
-  public ItemView(ItemGridViewRepository itemGridViewRepository, AuthenticatedAccount authenticatedAccount) {
-    this.itemGridViewRepository = itemGridViewRepository;
-    this.gameMode = authenticatedAccount.isAuthenticated() ? authenticatedAccount.getAccount()
-        .getGameMode() : GameMode.PVP;
-
-    setSizeFull();
-
-    createHeader();
-    createGrid();
-
-    refreshGrid();
+  protected ItemView(Repository<ItemGridViewRecord> repository, AuthenticatedAccount authenticatedAccount) {
+    super(repository, authenticatedAccount);
+    createView();
   }
 
-  private void createHeader() {
+  @Override
+  protected Class<ItemGridViewRecord> getBeanClass() {
+    return ItemGridViewRecord.class;
+  }
+
+  @Override
+  protected Component[] createFilters() {
     TextField nameField = new TextField("Name");
     nameField.setWidthFull();
     nameField.addValueChangeListener(event -> setFilter("name", event.getValue(), value -> ITEM_GRID_VIEW.NAME.likeIgnoreCase("%" + value + "%")));
-
-    HorizontalLayout header = new HorizontalLayout(nameField);
-    header.setWidthFull();
-    add(header);
+    return new Component[]{nameField};
   }
 
-  private <V> void setFilter(String filter, V newValue, Function<V, Condition> conditionMapping) {
-    if (newValue == null) {
-      filterConditions.remove(filter);
-    } else {
-      filterConditions.put(filter, conditionMapping.apply(newValue));
-    }
-    refreshGrid();
-  }
-
-  private void refreshGrid() {
-    grid.setItems(itemGridViewRepository.read(filterConditions.values()));
-  }
-
-  private void createGrid() {
+  @Override
+  protected void createGridColumns(Grid<ItemGridViewRecord> grid, GameMode gameMode) {
     grid.addComponentColumn(entry -> Utils.createImageRenderer(entry, ItemGridViewRecord::getIconLink, ItemGridViewRecord::getName, ItemGridViewRecord::getHorizontalSlots, ItemGridViewRecord::getVerticalSlots))
         .setHeader("Image");
     grid.addColumn("name").setHeader("Name");
@@ -125,8 +97,6 @@ public class ItemView extends VerticalLayout {
 
       return new HorizontalLayout(marketButton, wikiButton);
     }).setHeader("Actions");
-
-    add(grid);
   }
 
 }

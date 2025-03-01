@@ -1,4 +1,4 @@
-package ch.gatzka;
+package ch.gatzka.table;
 
 import static ch.gatzka.Tables.KEY;
 
