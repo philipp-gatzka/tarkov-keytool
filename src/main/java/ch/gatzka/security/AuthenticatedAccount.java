@@ -1,6 +1,6 @@
 package ch.gatzka.security;
 
-import ch.gatzka.AccountRepository;
+import ch.gatzka.table.AccountRepository;
 import ch.gatzka.tables.records.AccountRecord;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import java.util.Map;

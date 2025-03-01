@@ -1,6 +1,6 @@
 package ch.gatzka.security;
 
-import ch.gatzka.AccountRepository;
+import ch.gatzka.table.AccountRepository;
 import ch.gatzka.tables.records.AccountRecord;
 import java.util.Arrays;
 import java.util.List;
