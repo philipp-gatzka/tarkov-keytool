@@ -183,7 +183,7 @@ public class ReportView extends VerticalLayout {
     }
 
     Integer keyReportId = keyReportRepository.insertWithId(entity -> entity.setReportedBy(authenticatedAccount.getAccount()
-        .getId()).setKeyId(keyField.getValue().getItemId()));
+        .getId()).setKeyId(keyField.getValue().getItemId()).setGameMode(gameMode));
 
     list.forEach(lootModel -> lootReportRepository.insert(entity -> entity.setItemId(lootModel.getItem().getId())
         .setCount(lootModel.getCount())

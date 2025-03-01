@@ -20,12 +20,15 @@ public abstract class FilteredGridView<T extends TableRecord<T>> extends Vertica
 
   private final Grid<T> grid = Utils.defaultStripedGrid(getBeanClass());
 
-  private final GameMode gameMode;
+  protected final GameMode gameMode;
 
   private final Map<String, Condition> filterConditions = new HashMap<>();
 
+  protected final AuthenticatedAccount authenticatedAccount;
+
   protected FilteredGridView(Repository<T> repository, AuthenticatedAccount authenticatedAccount) {
     this.repository = repository;
+    this.authenticatedAccount = authenticatedAccount;
     this.gameMode = authenticatedAccount.isAuthenticated() ? authenticatedAccount.getAccount()
         .getGameMode() : GameMode.PVP;
 

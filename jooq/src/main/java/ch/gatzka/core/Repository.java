@@ -4,6 +4,7 @@ import java.util.Collection;
 import lombok.Getter;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.OrderField;
 import org.jooq.Result;
 import org.jooq.Table;
 import org.jooq.TableRecord;
@@ -34,7 +35,7 @@ public abstract class Repository<R extends TableRecord<R>> {
   }
 
   public Result<R> read() {
-    return read(DSL.trueCondition());
+    return dslContext.fetch(table);
   }
 
   public Result<R> read(Condition... conditions) {
@@ -46,7 +47,7 @@ public abstract class Repository<R extends TableRecord<R>> {
   }
 
   public R get(Condition... conditions) {
-    return dslContext.fetchOne(table, conditions);
+    return dslContext.selectFrom(table).where(conditions).fetchOne();
   }
 
 }
