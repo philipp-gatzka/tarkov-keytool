@@ -120,6 +120,8 @@ tasks {
                         "tarkov-keytool:${getBranchVersion()}",
                         "ghcr.io/philipp-gatzka/tarkov-keytool:latest"
                     )
+                }
+                exec {
                     commandLine("docker", "push", "ghcr.io/philipp-gatzka/tarkov-keytool:latest")
                 }
             }

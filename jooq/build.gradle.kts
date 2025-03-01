@@ -51,6 +51,7 @@ tasks {
         user = databaseMigrationUser
         password = databaseMigrationPassword
         schemas = arrayOf("public")
+        inputs.files(fileTree("src/main/resources/db/migration"))
     }
     jooqCodegen {
         dependsOn("migrateContainer")
