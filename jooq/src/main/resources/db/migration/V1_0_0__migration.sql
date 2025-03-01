@@ -106,7 +106,8 @@ CREATE TABLE key_report
     id          SERIAL    NOT NULL PRIMARY KEY,
     key_id      INTEGER   NOT NULL REFERENCES key,
     reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    reported_by INTEGER   NOT NULL REFERENCES account
+    reported_by INTEGER   NOT NULL REFERENCES account,
+    game_mode   GAME_MODE NOT NULL
 );
 
 CREATE TABLE loot_report
@@ -115,4 +116,125 @@ CREATE TABLE loot_report
     item_id       INTEGER NOT NULL REFERENCES item,
     key_report_id INTEGER NOT NULL REFERENCES key_report,
     count         INTEGER NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION item_value(item_id INTEGER, game_mode GAME_MODE) RETURNS INTEGER AS
+$$
+DECLARE
+    f_dollar_tarkov_id TEXT := '5696686a4bdc2da3298b456a';
+    f_euro_tarkov_id   TEXT := '569668774bdc2da2298b4568';
+    f_flea_price       INTEGER;
+    f_trader_price     INTEGER;
+    f_trader_currency  TEXT;
+    f_banned_on_flea   BOOLEAN;
+    f_trader_value     INTEGER;
+    f_dollar_price     INTEGER;
+    f_euro_price       INTEGER;
+BEGIN
+    IF game_mode = 'PVP' THEN
+        BEGIN
+            SELECT pvp_flea_price,
+                   pvp_banned_on_flea,
+                   trader_price,
+                   trader_currency,
+                   (SELECT trader_price FROM item WHERE tarkov_id = f_dollar_tarkov_id) AS dollar_price,
+                   (SELECT trader_price FROM item WHERE tarkov_id = f_euro_tarkov_id)   AS euro_price
+            INTO f_flea_price, f_banned_on_flea, f_trader_price, f_trader_currency, f_dollar_price, f_euro_price
+            FROM item
+            WHERE id = item_id;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RAISE EXCEPTION 'Item with id % does not exist.', item_id;
+        END;
+    ELSE
+        BEGIN
+            SELECT pve_flea_price,
+                   pve_banned_on_flea,
+                   trader_price,
+                   trader_currency,
+                   (SELECT trader_price FROM item WHERE tarkov_id = f_dollar_tarkov_id) AS dollar_price,
+                   (SELECT trader_price FROM item WHERE tarkov_id = f_euro_tarkov_id)   AS euro_price
+            INTO f_flea_price, f_banned_on_flea, f_trader_price, f_trader_currency, f_dollar_price, f_euro_price
+            FROM item
+            WHERE id = item_id;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RAISE EXCEPTION 'Item with id % does not exist.', item_id;
+        END;
+    END IF;
+
+    IF f_banned_on_flea THEN
+        IF f_trader_currency = '$' THEN
+            SELECT trader_price INTO f_dollar_price FROM item WHERE tarkov_id = f_dollar_tarkov_id;
+            RETURN f_trader_price * f_dollar_price;
+        ELSIF f_trader_currency = '€' THEN
+            SELECT trader_price INTO f_euro_price FROM item WHERE tarkov_id = f_euro_tarkov_id;
+            RETURN f_trader_price * f_euro_price;
+        ELSE
+            RETURN f_trader_price;
+        END IF;
+    ELSE
+        f_trader_value := f_trader_price;
+        IF f_trader_currency = '$' THEN
+            SELECT trader_price INTO f_dollar_price FROM item WHERE tarkov_id = f_dollar_tarkov_id;
+            f_trader_value := f_trader_value * f_dollar_price;
+        ELSIF f_trader_currency = '€' THEN
+            SELECT trader_price INTO f_euro_price FROM item WHERE tarkov_id = f_euro_tarkov_id;
+            f_trader_value := f_trader_value * f_euro_price;
+        END IF;
+
+        IF COALESCE(f_flea_price, 0) > f_trader_value THEN
+            RETURN f_flea_price;
+        ELSE
+            RETURN f_trader_value;
+        END IF;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE VIEW loot_report_view AS
+SELECT loot_report.item_id,
+       loot_report.count,
+       loot_report.key_report_id,
+       item.name,
+       item.icon_link,
+       item.horizontal_slots,
+       item.vertical_slots,
+       item_value(item_id := loot_report.item_id, game_mode := 'PVP') * count AS pvp_value,
+       item_value(item_id := loot_report.item_id, game_mode := 'PVE') * count AS pve_value
+FROM loot_report
+         JOIN item ON loot_report.item_id = item.id;
+
+CREATE VIEW key_report_view AS
+SELECT key_report.id,
+       key_report.game_mode,
+       key_report.key_id,
+       key_report.reported_at,
+       key_report.reported_by,
+       key.uses,
+       item.name,
+       item.icon_link,
+       item.tags,
+       CASE WHEN game_mode = 'PVP' THEN pvp_flea_price ELSE pve_flea_price END                              AS flea_price,
+       SUM(CASE WHEN game_mode = 'PVP' THEN loot_report_view.pvp_value ELSE loot_report_view.pve_value END) AS value
+FROM key_report
+         JOIN key ON key_report.key_id = key.item_id
+         JOIN item ON key.item_id = item.id
+         JOIN loot_report_view ON key_report.id = loot_report_view.key_report_id
+GROUP BY key_report.id,
+         key_report.game_mode,
+         key_report.key_id,
+         key_report.reported_at,
+         key_report.reported_by,
+         key.uses,
+         item.name,
+         item.icon_link,
+         item.tags,
+         CASE WHEN game_mode = 'PVP' THEN pvp_flea_price ELSE pve_flea_price END;
+
+CREATE TABLE wipe
+(
+    id        SERIAL       NOT NULL PRIMARY KEY,
+    wipe_date timestamp         NOT NULL,
+    version   VARCHAR(255) NOT NULL
 );
