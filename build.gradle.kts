@@ -77,7 +77,9 @@ fun gitBranch(): String {
     }
 }
 
-fun getBranchVersion(): String {
+fun getBranchVersion(): String 
+    val branch = gitBranch()
+    if (branch == "main") return project.version.toString()
     return project.version.toString() + "." + gitBranch().replace("/", "-")
 }
 
