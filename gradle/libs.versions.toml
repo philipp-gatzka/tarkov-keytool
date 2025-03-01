@@ -24,7 +24,7 @@ spring-boot-security = { group = "org.springframework.boot", name = "spring-boot
 spring-boot-oauth2 = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
 spring-boot-jooq = { group = "org.springframework.boot", name = "spring-boot-starter-jooq" }
 spring-boot-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
-spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
+spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools", version.ref = "spring-boot" }
 spring-boot-web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
 lineawesome = { group = "org.parttio", name = "line-awesome", version = "2.1.0" }
 apollo = { group = "com.apollographql.java", name = "client", version = "0.0.2" }

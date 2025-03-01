@@ -1,5 +1,13 @@
 /.gradle/
 /build/
 /logs/
+/node_modules
+/src/main/bundles
 /src/main/frontend/generated
 /.env
+/package.json
+/package-lock.json
+/tsconfig.json
+/types.d.ts
+/vite.config.ts
+/vite.generated.ts

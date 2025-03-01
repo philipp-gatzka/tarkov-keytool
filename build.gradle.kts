@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     id("java")
     alias(libs.plugins.sonar)
@@ -54,6 +56,59 @@ allprojects {
     extensions.findByType(JavaPluginExtension::class)?.apply {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(23))
+        }
+    }
+}
+
+fun gitBranch(): String {
+    return try {
+        val byteOut = ByteArrayOutputStream()
+        project.exec {
+            commandLine = "git rev-parse --abbrev-ref HEAD".split(" ")
+            standardOutput = byteOut
+        }
+        String(byteOut.toByteArray()).trim().also {
+            if (it == "HEAD")
+                logger.warn("Unable to determine current branch: Project is checked out with detached head!")
+        }
+    } catch (e: Exception) {
+        logger.warn("Unable to determine current branch: ${e.message}")
+        "Unknown Branch"
+    }
+}
+
+fun getBranchVersion(): String {
+    return project.version.toString() + "." + gitBranch().replace("/", "-")
+}
+
+tasks {
+    register("buildDockerImage") {
+        dependsOn(bootJar)
+        doLast {
+            exec {
+                commandLine("docker", "build", "-t", "tarkov-keytool:${getBranchVersion()}", ".")
+            }
+        }
+    }
+    register("tagDockerImage") {
+        dependsOn("buildDockerImage")
+        doLast {
+            exec {
+                commandLine(
+                    "docker",
+                    "tag",
+                    "tarkov-keytool:${getBranchVersion()}",
+                    "ghcr.io/philipp-gatzka/tarkov-keytool:${getBranchVersion()}"
+                )
+            }
+        }
+    }
+    register("pushDockerImage") {
+        dependsOn("tagDockerImage")
+        doLast {
+            exec {
+                commandLine("docker", "push", "ghcr.io/philipp-gatzka/tarkov-keytool:${getBranchVersion()}")
+            }
         }
     }
 }
