@@ -37,3 +37,20 @@ CREATE TABLE key
     item_id INTEGER NOT NULL PRIMARY KEY REFERENCES item,
     uses    INTEGER NOT NULL
 );
+
+CREATE VIEW item_grid_view AS
+SELECT id                                                              AS item_id,
+       name,
+       icon_link,
+       wiki_link,
+       market_link,
+       horizontal_slots,
+       vertical_slots,
+       trader_currency,
+       trader_price,
+       pvp_banned_on_flea,
+       pve_banned_on_flea,
+       CASE WHEN NOT pvp_banned_on_flea THEN pvp_flea_price ELSE 0 END AS pvp_flea_price,
+       CASE WHEN NOT pve_banned_on_flea THEN pve_flea_price ELSE 0 END AS pve_flea_price,
+       tags
+FROM item;

@@ -1,5 +1,6 @@
 package ch.gatzka.core;
 
+import java.util.Collection;
 import lombok.Getter;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -37,6 +38,10 @@ public abstract class Repository<R extends TableRecord<R>> {
   }
 
   public Result<R> read(Condition... conditions) {
+    return dslContext.fetch(table, conditions);
+  }
+
+  public Result<R> read(Collection<Condition> conditions) {
     return dslContext.fetch(table, conditions);
   }
 
