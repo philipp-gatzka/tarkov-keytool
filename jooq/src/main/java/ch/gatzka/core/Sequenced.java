@@ -10,7 +10,7 @@ public interface Sequenced<R extends UpdatableRecord<R>, I extends Number> {
 
   default I insertWithId(UnaryOperator<R> mapping) {
     return getDslContext().insertInto(getTable())
-        .set(getDslContext().newRecord(getTable()))
+        .set(mapping.apply(getDslContext().newRecord(getTable())))
         .returningResult(getSequencedField())
         .fetchSingle(getSequencedField());
   }

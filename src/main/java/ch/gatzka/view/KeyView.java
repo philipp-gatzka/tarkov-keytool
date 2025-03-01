@@ -52,6 +52,7 @@ public class KeyView extends FilteredGridView<KeyGridViewRecord> {
     locationField.setItems(locationViewRepository.read());
     locationField.setItemLabelGenerator(LocationViewRecord::getClean);
     locationField.addValueChangeListener(event -> setFilter("location", event.getValue(), entry -> KEY_GRID_VIEW.TAGS.contains(new String[]{entry.getLocation()})));
+    locationField.setClearButtonVisible(true);
 
     return new Component[]{nameField, locationField};
   }
