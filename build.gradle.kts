@@ -105,11 +105,31 @@ tasks {
             }
         }
     }
+    register("tagDockerImageLatest") {
+        doLast {
+            exec {
+                commandLine(
+                    "docker",
+                    "tag",
+                    "tarkov-keytool:${getBranchVersion()}",
+                    "ghcr.io/philipp-gatzka/tarkov-keytool:latest"
+                )
+            }
+        }
+    }
     register("pushDockerImage") {
         dependsOn("tagDockerImage")
         doLast {
             exec {
                 commandLine("docker", "push", "ghcr.io/philipp-gatzka/tarkov-keytool:${getBranchVersion()}")
+            }
+        }
+        if (gitBranch() == "main") {
+            dependsOn("tagDockerImageLatest")
+            doLast {
+                exec {
+                    commandLine("docker", "push", "ghcr.io/philipp-gatzka/tarkov-keytool:latest")
+                }
             }
         }
     }
