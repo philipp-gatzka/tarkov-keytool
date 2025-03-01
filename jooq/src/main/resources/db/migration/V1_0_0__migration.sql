@@ -79,3 +79,40 @@ FROM key
      UNNEST(item.tags) AS all_tags(tag)
 WHERE tag != 'Keys'
 GROUP BY tag;
+
+CREATE VIEW key_view AS
+SELECT item_id,
+       uses,
+       tarkov_id,
+       market_id,
+       name,
+       icon_link,
+       wiki_link,
+       market_link,
+       horizontal_slots,
+       vertical_slots,
+       trader_currency,
+       trader_price,
+       pvp_banned_on_flea,
+       pve_banned_on_flea,
+       pvp_flea_price,
+       pve_flea_price,
+       tags
+FROM key
+         JOIN item ON key.item_id = item.id;
+
+CREATE TABLE key_report
+(
+    id          SERIAL    NOT NULL PRIMARY KEY,
+    key_id      INTEGER   NOT NULL REFERENCES key,
+    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reported_by INTEGER   NOT NULL REFERENCES account
+);
+
+CREATE TABLE loot_report
+(
+    id            SERIAL  NOT NULL PRIMARY KEY,
+    item_id       INTEGER NOT NULL REFERENCES item,
+    key_report_id INTEGER NOT NULL REFERENCES key_report,
+    count         INTEGER NOT NULL
+);
