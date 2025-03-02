@@ -11,6 +11,7 @@ import ch.gatzka.pojo.Item;
 import ch.gatzka.table.ItemRepository;
 import ch.gatzka.table.KeyRepository;
 import ch.gatzka.tables.records.ItemRecord;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,12 @@ public class DataUpdatingService {
 
   @Scheduled(initialDelay = 10, fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
   public void updateBaseData() {
+    log.info("Updating base data");
     updatePVPData();
     updatePVEData();
     updateSlots();
     updateKeys();
+    log.info("Finished updating base data, next update in 10 minutes ({})", LocalDateTime.now().plusMinutes(10));
   }
 
   private void updateKeys() {
