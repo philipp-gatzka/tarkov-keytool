@@ -128,7 +128,7 @@ public class ReportsView extends FilteredGridView<KeyReportViewRecord> {
     Checkbox onlySelf = new Checkbox("Show only my reports");
     onlySelf.setWidthFull();
     onlySelf.setValue(false);
-    onlySelf.addValueChangeListener(event -> setFilter("onlySelf", event.getValue(), value -> value ? KEY_REPORT_VIEW.REPORTED_BY.eq(authenticatedAccount.getAccount()
+    onlySelf.addValueChangeListener(event -> setFilter("onlySelf", event.getValue(), value -> Boolean.TRUE.equals(value) ? KEY_REPORT_VIEW.REPORTED_BY.eq(authenticatedAccount.getAccount()
         .getId()) : DSL.trueCondition()));
 
     onlySelf.getStyle().setAlignSelf(Style.AlignSelf.END);

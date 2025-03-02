@@ -1,3 +1,15 @@
+DO
+$do$
+    BEGIN
+        IF EXISTS(SELECT FROM pg_catalog.pg_roles WHERE rolname = 'tarkov_keytool') THEN
+            RAISE NOTICE 'Role "tarkov_keytool" already exists. Skipping';
+        ELSE CREATE ROLE tarkov_keytool;
+            ALTER ROLE tarkov_keytool
+                LOGIN;
+        END IF;
+    END
+$do$;
+
 CREATE TYPE ACCOUNT_ROLE AS ENUM ('USER', 'ADMIN');
 
 CREATE TYPE GAME_MODE AS ENUM ('PVE', 'PVP');
@@ -238,3 +250,7 @@ CREATE TABLE wipe
     wipe_date timestamp         NOT NULL,
     version   VARCHAR(255) NOT NULL
 );
+
+GRANT INSERT, SELECT, UPDATE ON ALL TABLES IN SCHEMA public TO tarkov_keytool;
+
+GRANT SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO tarkov_keytool;
