@@ -1,7 +1,7 @@
 [versions]
 flyway = "11.3.3"
 jooq = "3.19.19"
-vaadin = "24.6.5"
+vaadin = "24.6.6"
 spring-boot = "3.4.3"
 
 [plugins]
