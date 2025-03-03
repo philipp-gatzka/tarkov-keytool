@@ -10,7 +10,7 @@ flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 jooq = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
 vaadin = { id = "com.vaadin", version.ref = "vaadin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-lombok = { id = "io.freefair.lombok", version = "8.12.2" }
+lombok = { id = "io.freefair.lombok", version = "8.12.2.1" }
 apollo = { id = "com.apollographql.apollo", version = "4.1.1" }
 
 [libraries]
