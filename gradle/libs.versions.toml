@@ -16,7 +16,7 @@ apollo = { id = "com.apollographql.apollo", version = "4.1.1" }
 [libraries]
 flyway-postgres = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 postgres = { group = "org.postgresql", name = "postgresql", version = "42.7.5" }
-testcontainer-postgres = { group = "org.testcontainers", name = "postgresql", version = "1.20.5" }
+testcontainer-postgres = { group = "org.testcontainers", name = "postgresql", version = "1.20.6" }
 spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
 vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin" }
 spring-boot-vaadin = { group = "com.vaadin", name = "vaadin-spring-boot-starter" }
